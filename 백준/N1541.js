@@ -26,33 +26,41 @@ function solution(input) {
   let num = '';
   let save = 0;
   let minus = 0;
-
   let check = true;
+
   for (let i = 0; i < input.length; i++) {
-    if (check && !isNaN(Number(input[i]))) {
-      num += input[i];
-    } else if (check && input[i] === '+') {
-      save += Number(num);
-      num = '';
-    }
     if (check && input[i] === '-') {
       save += Number(num);
       num = '';
       check = false;
-    }
-    if (!check && !isNaN(Number(input[i]))) {
-      num += input[i];
-    } else if (!check && (input[i] === '+' || input[i] === '-')) {
-      minus += Number(num);
-      num = '';
-    }
 
+    }
+    if (check) {
+      if (input[i] === '+') {
+        save += Number(num);
+        num = '';
+      }
+      else if (!isNaN(Number(input[i]))) {
+        num += input[i];
+
+      }
+    } else {
+      if (!isNaN(Number(input[i]))) {
+        num += input[i];
+      }
+      else if ((input[i] === '+' || input[i] === '-')) {
+        minus += Number(num);
+        num = '';
+      }
+    }
   }
 
-  if (!check && num) {
-    minus += Number(num);
-  } else if (check && num) {
-    save += Number(num);
+  if (num) {
+    if (!check) {
+      minus += Number(num);
+    } else {
+      save += Number(num);
+    }
   }
   console.log(save - minus);
 }
