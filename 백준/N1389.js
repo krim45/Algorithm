@@ -1,52 +1,55 @@
-let input = `5 5
-1 3
-1 4
-4 5
-4 3
-3 2`;
-
-input = input.split('\n');
-
 function solution(input) {
-  let arr = input.map(v => v.trim().split(' ').map(Number));
-  const [N, M] = arr.shift();
-  const graph = Array.from(Array(N + 1), () => new Array(N + 1).fill(false));
-  const visited = new Array(N + 1).fill(false);
+    let arr = input.map(v => v.trim().split(' ').map(Number));
+    const [N, M] = arr.shift();
+    let graph = Array.from(Array(N + 1), () => new Array(N + 1).fill(false));
+    let visited = new Array(N + 1).fill(false);
 
-  for (let i = 0; i < N; i++) {
-    const [a, b] = arr[i];
-    graph[a][b] = true;
-    graph[b][a] = true;
-  }
-
-  let count = 1;
-  let result = [];
-  let kevin = [];
-  let queue = [];
-  let num = 1;
-
-  function bfs(x) {
-    queue.push(x);
-    while (queue.length > 0) {
-      for (let j = 0; j < 5; j++) {
-        const start = queue.shift();
-        visited[start] = true;
-        count++;
-        if (graph[start]) {
-          graph[start].map((v, i) => {
-            if (v && !visited[i]) {
-              queue.push(i);
-              kevin.push(count);
-              visited[i] = true;
-            }
-          });
-        }
-        num = queue.length;
-      }
+    for (let i = 0; i < M; i++) {
+        const [a, b] = arr[i];
+        graph[a][b] = true;
+        graph[b][a] = true;
     }
-  }
-  bfs(1)
-  console.log(kevin);
+
+    let result = [];
+    let queue = [];
+    let step = new Array(N + 1).fill(0);
+
+    function bfs(x) {
+        queue.push(x);
+        while (queue.length > 0) {
+            let start = queue.shift();
+            visited[start] = true;
+            graph[start].forEach((v, i) => {
+                if (v && !visited[i]) {
+                    queue.push(i);
+                    step[i] = step[start] + 1;
+                    visited[i] = true;
+                }
+            });
+        }
+    }
+    
+    for (let i = 1; i <= N; i++) {
+        step = new Array(N + 1).fill(0);
+        visited = new Array(N + 1).fill(false);
+        bfs(i);
+        let sum = step.reduce((acc, cur) => acc + cur);
+        result.push(sum)
+    }
+    
+    console.log(result.indexOf(Math.min(...result)) + 1);
 }
 
-solution(input);
+const rl = require('readline').createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+let input = [];
+
+rl.on('line', function (line) {
+    input.push(line);
+}).on('close', () => {
+    solution(input);
+    process.exit();
+});
