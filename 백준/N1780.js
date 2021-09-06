@@ -5,26 +5,27 @@ function solution(input) {
   let board = input.slice(1).map(v => v.split(' ').map(Number));
   let result = { '-1': 0, '0': 0, '1': 0 };
 
-  function check(x1, y1, x2, y2) {
-    for (let i = x1; i < y1; i++) {
-      for (let j = x2; j < y2; j++) {
-        if (board[i][j] !== board[x1][x2]) {
-          let firstX = x2 + (y2 - x2) / 3;
-          let secondX = x2 + 2 * (y2 - x2) / 3;
-          let firstY = x1 + (y1 - x1) / 3;
-          let secondY = x1 + 2 * (y1 - x1) / 3
+  function check(startY, endY, startX, endX) {
+    for (let i = startY; i < endY; i++) {
+      for (let j = startX; j < endX; j++) {
+        if (board[i][j] !== board[startY][startX]) {
+          let firstX = startX + (endX - startX) / 3;
+          let secondX = startX + 2 * (endX - startX) / 3;
 
-          check(x1, firstY, x2, firstX);
-          check(x1, firstY, firstX, secondX);
-          check(x1, firstY, secondX, y2);
+          let firstY = startY + (endY - startY) / 3;
+          let secondY = startY + 2 * (endY - startY) / 3
 
-          check(firstY, secondY, x2, firstX);
+          check(startY, firstY, startX, firstX);
+          check(startY, firstY, firstX, secondX);
+          check(startY, firstY, secondX, endX);
+
+          check(firstY, secondY, startX, firstX);
           check(firstY, secondY, firstX, secondX);
-          check(firstY, secondY, secondX, y2);
+          check(firstY, secondY, secondX, endX);
 
-          check(secondY, y1, x2, firstX);
-          check(secondY, y1, firstX, secondX);
-          check(secondY, y1, secondX, y2);
+          check(secondY, endY, startX, firstX);
+          check(secondY, endY, firstX, secondX);
+          check(secondY, endY, secondX, endX);
           return;
         }
       }
