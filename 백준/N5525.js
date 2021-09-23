@@ -1,3 +1,29 @@
+// 100점
+const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
+const N = +input[0];
+const M = +input[1];
+const S = input[2];
+let count = 0;
+
+function solution(input) {
+    for (let i = 0; i < M - 2; i++) {
+        if (S[i] === 'I') {
+            let number = 0;
+            while(S[i+1] === 'O' && S[i+2] === 'I') {
+                i += 2;
+                number++;
+                if (number === N) {
+                    count++;
+                    number--;
+                }
+            }
+        }
+    }
+    console.log(count);
+}
+
+solution(S);
+
 // 50점
 const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n');
 const N = +input[0];
