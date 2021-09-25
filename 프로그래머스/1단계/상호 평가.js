@@ -20,13 +20,7 @@ function solution(scores) {
         return true;
     } 
     
-    const list = Array.from(Array(scores.length), () => new Array());
-        
-    for (let i = 0; i < scores.length; i++) {
-        for (let j = 0; j < scores[i].length; j++) {
-            list[j].push(scores[i][j]);
-        }
-    }
+    const list = scores.map((score, i) => scores.map(v => v[i]));
     
     for (let i = 0; i < list.length; i++) {
         if ((list[i][i] === Math.max(...list[i]) || list[i][i] === Math.min(...list[i])) && onlyOne(list[i], list[i][i])) {
