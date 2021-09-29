@@ -1,5 +1,6 @@
 const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n').map(v => +v);
 const N = input.shift();
+const result = [];
 const heap = new Array(100001);
 let heapSize = 0;
 
@@ -13,24 +14,26 @@ const swap = (idx1, idx2) => {
 const insert = (value) => {
   heap[++heapSize] = value;
   let idx = heapSize;
-  let parentIdx = Math.floor(idx / 2)
 
-  while (idx > 1) {
+  while (idx !== 1) {
+    let parentIdx = Math.floor(idx / 2)
+
     if (heap[idx] < heap[parentIdx]) {
       swap(idx, parentIdx);
       idx = parentIdx;
-      continue;
+    } else {
+      break;
     }
-    break;
   }
 }
 
 // 하향식
 const getMin = () => {
-  if (!heapSize) return 0;
-
+  if (!heapSize) return 0
   let result = heap[1];
-  heap[1] = heap[heapSize--];
+  heap[1] = heap[heapSize];
+  heap[heapSize] = null;
+  heapSize--;
   let idx = 1;
 
   // 최소 heap 추출 후 heap 재구성
@@ -48,26 +51,20 @@ const getMin = () => {
     if (heap[idx] > heap[childIdx]) {
       swap(idx, childIdx);
       idx = childIdx;
-      continue
+    } else {
+      break;
     }
-    break;
   }
 
   return result
 }
 
-function solution(input) {
-  const result = [];
-
-  for (let i = 0; i < input.length; i++) {
-    if (input[i]) {
-      insert(input[i])
-    } else {
-      result.push(getMin());
-    }
+for (let i = 0; i < input.length; i++) {
+  if (input[i]) {
+    insert(input[i])
+  } else {
+    result.push(getMin());
   }
-
-  console.log(result.join('\n'));
 }
 
-solution(input);
+console.log(result.join('\n'))
