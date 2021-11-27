@@ -1,0 +1,49 @@
+// 임시 시도 중
+// const input = require('fs').readFileSync('/dev/stdin').toString().trim().split('\n')
+let input = `8
+10 20 30 5 10 20 30 40`
+
+input = input.split('\n');
+const N = +input.shift();
+input = input[0].split(' ').map(Number);
+
+function solution(input) {
+  let LIS = [input[0]];
+
+  for (let i = 1; i < input.length; i++) {
+    const target = input[i];
+    if (LIS[LIS.length - 1] < target) {
+      LIS.push(target);
+    }
+    // else if (LIS[0] >= target) {
+    //   LIS[0] = target;
+    // } 
+    else {
+      let min = 0;
+      let max = LIS.length - 1;
+      let mid = Math.floor((min + max) / 2);
+      let tmp;
+      console.log(min, max);
+      while (min < max) {
+        mid = Math.floor((min + max) / 2);
+
+        if (LIS[mid] === target) {
+          LIS[mid] = target;
+          break;
+        }
+
+        if (LIS[mid] > target) {
+          max = mid - 1;
+        } else if (LIS[mid] > target) {
+          min = mid + 1;
+        }
+        tmp = Math.floor((min + max) / 2);
+        console.log(min, max);
+      }
+    }
+  };
+  console.log(LIS);
+  console.log(LIS.length);
+}
+
+solution(input);
