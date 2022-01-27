@@ -1,30 +1,20 @@
 function solution(n, lost, reserve) {
-    var answer = 0;
-    answer = n - lost.length;
-    for (let i = 0; i < reserve.length; i++) {
-        for (let j = 0; j < lost.length; j++) {
-            if (reserve[i] === lost[j]) {
-                reserve[i] = -10;
-                lost[j] = -3;
-                answer++;
-                break;
-            }
+    let lostFilter = lost.filter(v => !reserve.includes(v));
+    let reserveFilter = reserve.filter(v => !lost.includes(v)).sort((a, b) => a - b);
+    let num = n - lostFilter.length;
+    
+    for (let i = 0; i < reserveFilter.length; i++) {
+        let first = lostFilter.findIndex(v => v === reserveFilter[i] - 1);
+        
+        if (first === -1 ) {
+            first = lostFilter.findIndex(v => v === reserveFilter[i] + 1);   
+        }
+        
+        if (first !== -1) {
+            lostFilter.splice(first, 1);
+            num++;
         }
     }
-    for (let i = 0; i < reserve.length; i++) {
-        for (let j = 0; j < lost.length; j++) {
-            if (reserve[i] - 1 === lost[j]) {
-                answer++;
-                reserve[i] = -5;
-                lost[j] = -3;
-                break;
-            } else if (reserve[i] + 1 === lost[j]) {
-                answer++;
-                reserve[i] = -5;
-                lost[j] = -3;
-                break;
-            }
-        }
-    }
-    return answer;
+    
+    return num;
 }
