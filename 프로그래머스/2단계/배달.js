@@ -1,24 +1,29 @@
 function solution(N, road, K) {
-    const answer = [1];
-    const distance = {};
-    const board = new Array(N + 1).fill(0).map(_ => new Array(N + 1).fill(false));
+    const distance = new Array(N + 1).fill(Infinity);
+    const board = new Array(N + 1).fill(0).map(_ => []);
     
     for (let info of road) {
-        let first = Math.min(info[0], info[1]);
-        let second = Math.max(info[0], info[1]);
-        let dist = info[2];
-        board[first][second] = true;
+        const [from, to, dist] = info;
         
-        if (distance[[first, second]]) {
-            distance[[first, second]] = Math.min(distance[[first, second]], dist)
-        } else {
-            distance[[first, second]] = dist
-        }
+        board[from].push([to, dist]);
+        board[to].push([from, dist]);
     }
     
-    for (let i = 1; i <= N; i++) {
+    const queue = [1];
+    distance[1] = 0;
+    
+    while (queue.length > 0) {
+        const from = queue.pop();
         
+        board[from].forEach(next => {
+            const [to, dist] = next
+            
+            if (distance[to] > distance[from] + dist) {
+                distance[to] = distance[from] + dist;
+                queue.push(to);
+            }
+        })
     }
-
-    return distance;
+    
+    return distance.filter(v => v <= K).length;
 }
